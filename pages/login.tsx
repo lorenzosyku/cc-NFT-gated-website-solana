@@ -13,7 +13,7 @@ function Loginpage() {
   const { user } = useUser();
   const login = useLogin();
   const program = useProgram(
-    process.env.PROGRAM_ADDRESS,
+    process.env.NEXT_PUBLIC_PROGRAM_ADDRESS,
     "nft-drop"
   );
   const { mutate, isLoading } = useClaimNFT(program.data);
