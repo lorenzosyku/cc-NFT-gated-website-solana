@@ -2,8 +2,10 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { ThirdwebProvider } from "@thirdweb-dev/react/solana";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { Network } from "@thirdweb-dev/sdk/solana";
+import { domainName } from "../auth.config";
 
-const network = "devnet";
+export const network: Network = "devnet";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -11,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       network={network}
       authConfig={{
         authUrl: "/api/auth",
-        domain: "example.org",
+        domain: domainName,
         loginRedirect: "/",
       }}
     >
