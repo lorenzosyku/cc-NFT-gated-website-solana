@@ -1,4 +1,5 @@
 import { useLogout } from "@thirdweb-dev/react/solana";
+import { NFT } from "@thirdweb-dev/sdk";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import type { GetServerSideProps } from "next";
 import { getUser } from "../auth.config";
@@ -25,9 +26,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   const nfts = await program.getAllClaimed();
 
-  const hasNFT = nfts.some((nft) => nft.owner === user.address);
+  const nft = nfts.find((nft) => nft.owner === user.address);
 
-  if (!hasNFT) {
+  if (!nft) {
     return {
       redirect: {
         destination: "/login",
@@ -37,11 +38,27 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   }
 
   return {
-    props: {},
+    props: {
+      usersNFT: nft
+    },
   };
 };
 
-const Home = () => {
+type Props = {
+  usersNFT: NFT
+}
+
+enum Membership {
+  Standard="GYMPASS Standard",
+  Gold="GYMPASS Gold",
+  Platinium="GYMPASS Platinium"
+}
+
+type MembershipType ={
+  name: Membership
+}
+
+const Home = ({usersNFT}: Props) => {
   const logout = useLogout();
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2">
@@ -49,6 +66,15 @@ const Home = () => {
       <h3>you need to have an gympass nft to accessthis page</h3>
 
       <button onClick={logout}>Logout</button>
+
+      <div className="">
+        {usersNFT.metadata.image}
+        {usersNFT.metadata.name}
+
+        {usersNFT.metadata.name === Membership.Platinium && (
+          <h1>Platinium Content</h1>
+        )}
+      </div>
     </div>
   );
 };
